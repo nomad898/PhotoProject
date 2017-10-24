@@ -101,19 +101,6 @@ namespace PhotoProject.WEB.Controllers
             {
                 byte[] avatarData = null;
 
-                var validImageTypes = new string[]
-                {
-                    "image/gif",
-                    "image/jpeg",
-                    "image/pjpeg",
-                    "image/png"
-                };
-
-                if (!validImageTypes.Contains(registerViewModel.Avatar.ContentType))
-                {
-                    ModelState.AddModelError("ImageUpload", "Please choose either a GIF, JPG or PNG image.");
-                }
-
                 avatarData = ImageConverter.ConvertImage(registerViewModel.Avatar);
 
                 UserDTO userDto = new UserDTO
@@ -159,41 +146,5 @@ namespace PhotoProject.WEB.Controllers
         {
             return await UserService.FindByIdAsync(User.Identity.GetUserId());
         }
-
-        //[HttpGet]
-        //public async Task<ActionResult> Edit()
-        //{
-        //    UserDTO userDto = await GetCurrentUserAsync();
-
-        //    if (userDto == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-
-        //    Mapper.Initialize(cfg => cfg.CreateMap<UserDTO, UserViewModel>());
-        //    UserViewModel userVM = Mapper.Map<UserDTO, UserViewModel>(userDto);
-        //    return View(userVM);
-        //}
-
-        //[HttpPost]
-        //public async Task<ActionResult> Edit(UserViewModel userVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        Mapper.Initialize(cfg => cfg.CreateMap<UserViewModel, UserDTO>());
-        //        UserDTO userDto = Mapper.Map<UserViewModel, UserDTO>(userVM);
-
-        //        var result = await UserService.UpdateAsync(userDto);
-        //        if (result.Succeeded)
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError(result.Property, result.Message);
-        //        }
-        //    }
-        //    return View(userVM);
-        //}
     }
 }

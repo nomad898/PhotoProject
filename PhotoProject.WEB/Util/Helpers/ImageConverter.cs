@@ -22,14 +22,21 @@ namespace PhotoProject.WEB.Util.Helpers
             }
             else
             {
-                string defaultAvatarPath =
-                  HttpContext.Current.Server.MapPath(@"~/Images/noImg.png");
-                FileInfo fileInfo = new FileInfo(defaultAvatarPath);
-                long imageFileLength = fileInfo.Length;
-                FileStream fs = new FileStream(defaultAvatarPath, FileMode.Open, FileAccess.Read);
-                BinaryReader br = new BinaryReader(fs);
-                resultImage = br.ReadBytes((int)imageFileLength);
+                resultImage = CreateDefaultAvatar();
             }
+            return resultImage;
+        }
+
+        public static byte[] CreateDefaultAvatar()
+        {
+            byte[] resultImage = null;
+            string defaultAvatarPath =
+                  HttpContext.Current.Server.MapPath(@"~/Images/noImg.png");
+            FileInfo fileInfo = new FileInfo(defaultAvatarPath);
+            long imageFileLength = fileInfo.Length;
+            FileStream fs = new FileStream(defaultAvatarPath, FileMode.Open, FileAccess.Read);
+            BinaryReader br = new BinaryReader(fs);
+            resultImage = br.ReadBytes((int)imageFileLength);
             return resultImage;
         }
     }
