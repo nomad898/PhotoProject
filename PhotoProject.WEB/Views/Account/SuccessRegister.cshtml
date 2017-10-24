@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Please wait...";
+}
+
+<h2>You have successfully registered to the galery!</h2>
+
+<script type="text/javascript">
+    window.setTimeout(function () {
+    window.location.href = '@Url.Action("Index", "Home")';
+    }, 1000);
+</script>

@@ -1,0 +1,21 @@
+﻿@model ICollection<PhotoProject.WEB.Models.RatingViewModel>
+
+<div id="ratings">
+    <br />
+    <h2> Ratings</h2>
+
+    @if (Model.Count() == 0)
+    {
+        <h6> There are no rating</h6>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="rating-node">
+                <h4>@item.UserName</h4>
+                <p>@item.RatingValue</p>                
+            </div>
+        }
+    }
+</div>

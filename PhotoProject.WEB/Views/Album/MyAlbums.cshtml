@@ -1,0 +1,51 @@
+﻿
+@model ICollection<PhotoProject.WEB.Models.AlbumViewModel>
+@{
+    ViewBag.Title = "My Albums";
+}
+
+@Html.ActionLink("Create New Album", "Create", "Album",
+                            new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+            Title
+        </th>
+        <th>
+            Created At
+        </th>
+        <th></th>
+    </tr>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="3" class="text-center">There are no albums</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @using (Html.BeginForm("Delete", "Album", new { id = item.Id }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ActionLink("Details", "Details", new { id = item.Id },
+                         new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id },
+                         new { @class = "btn btn-info btn-small btn-xs", style = "float: left; margin-right: 10px" })
+                        <button class="btn btn-danger btn-xs" type="submit">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    }
+</table>

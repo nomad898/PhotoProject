@@ -1,0 +1,49 @@
+﻿@model IEnumerable<PhotoProject.WEB.Models.AlbumViewModel>
+@{
+    ViewBag.Title = "Search";
+}
+
+@using (Html.BeginForm("Index", "Search", FormMethod.Post))
+{
+    @Html.TextBox("Title")<input type="submit" value="Search" />
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Album Title
+            </th>
+            <th>
+                Username
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="3" style="color: red">
+                    No albums
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.UserName</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Album", new { id = item.Id },
+                         new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>

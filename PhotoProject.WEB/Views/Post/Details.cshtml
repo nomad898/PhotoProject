@@ -1,0 +1,66 @@
+﻿
+@model PhotoProject.WEB.Models.PostInfo
+@using PhotoProject.WEB.Util.Helpers
+@{
+    ViewBag.Title = @Model.Post.Description;
+}
+<h2>@Model.Post.Description</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Post.CreatedAt)          
+        </dt>
+        <dd>
+            @Model.Post.CreatedAt
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Post.VoteCounter)
+        </dt>
+        <dd>
+            @Model.Post.VoteCounter
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Post.AverageRating)
+        </dt>
+        <dd>
+            @Model.Post.AverageRating
+        </dd>
+       
+        @if (Model.Post.Photos.Count == 0)
+        {
+            <dt>
+                no photos
+            </dt>
+        }
+        else
+        {
+            foreach (var item in Model.Post.Photos)
+            {
+                <dt>
+                    @Html.DisplayNameFor(x => item.Title)
+                </dt>
+                <dd>
+                    @item.Title
+                </dd>
+                <dt>
+                    Photo
+                </dt>
+                <dd>
+                    @Html.Image(item.Content, "img-cls", new { width = "400", height = "300" })
+                </dd>
+            }
+        }
+    </dl>
+
+    @{
+        Html.RenderPartial("_AddRating", Model.Rating);
+        Html.RenderPartial("_AddComment", Model.Comment);
+        Html.RenderPartial("_ShowRatings", Model.Post.Ratings);
+        Html.RenderPartial("_ShowComments", Model.Post.Comments);
+    }
+    
+</div>
+<p>
+    @Html.ActionLink("Back to album details", "Details", "Album", new { id = Model.Post.AlbumId }, null)
+</p>

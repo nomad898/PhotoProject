@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    @Html.AntiForgeryToken()
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Search", "Index", "Search")</li>
+        <li>@Html.ActionLink("All Albums", "Index", "Album")</li>
+        <li>@Html.ActionLink("My albums", "MyAlbums", "Album")</li>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <li>@Html.ActionLink("Admin", "Index", "Admin")</li>
+        }
+        <li>@Html.ActionLink(User.Identity.GetUserName(), "Details", "Account")</li>
+        <li>@Html.ActionLink("Logout", "Logout", "Account")</li>
+    </ul>
+}
+
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Login", "Login", "Account")</li>
+        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+    </ul>
+}

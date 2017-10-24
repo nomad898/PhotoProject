@@ -1,0 +1,84 @@
+﻿@model PhotoProject.WEB.Models.AlbumViewModel
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = @Model.Title;
+}
+<h3>@Model.UserName</h3>
+<h2>@Model.Title</h2>
+<div>    
+    <h3>@Model.Description</h3>
+    <hr />
+    <dl class="dl-horizontal">                 
+        @if (Model.UserId == User.Identity.GetUserId() && User.Identity.IsAuthenticated)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Public)
+            </dt>
+            <dd>
+                @Model.Public
+            </dd>
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+        <dd>
+            @Model.CreatedAt
+        </dd>
+    </dl>
+</div>
+@if (Model.UserId == User.Identity.GetUserId() && User.Identity.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id },
+                                 new { @class = "btn btn-info btn-xs", style = "float: left; margin-right: 10px" })
+        @Html.ActionLink("Create post", "Create", "Post", new { id = Model.Id },
+                                 new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+    </p>
+}
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+            Title
+        </th>
+        <th>
+            Created At
+        </th>
+        <th></th>
+    </tr>
+    @if (Model.Posts.Count() == 0)
+    {
+        <tr>
+            <td colspan="3" class="text-center">There are no posts</td>
+        </tr>
+    }
+    else
+    {
+        foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", "Post", new { id = item.Id },
+                         new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+                    @if (Model.UserId == User.Identity.GetUserId() && User.Identity.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Delete", "Post", new { id = item.Id }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-danger btn-xs" type="submit">Delete</button>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

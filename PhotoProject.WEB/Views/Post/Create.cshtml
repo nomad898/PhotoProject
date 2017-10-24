@@ -1,0 +1,53 @@
+﻿@model PhotoProject.WEB.Models.CreatePostViewModel
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@{
+    ViewBag.Title = "Create Post";
+}
+<h2>Create New Post</h2>
+@using (Html.BeginForm("Create", "Post", FormMethod.Post,
+    new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Post</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.AlbumId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+            </div>
+        </div>
+        <h3> Images</h3>
+        <div class="col-md-offset-2 col-md-10">
+            <div class="image-input">
+                <label for="imagetitle0">Image Title</label>
+                <input type="text" name="Photos[0].Title" id="imagetitle0">
+                <input type="file" name="Photos[0].Image" id="image0">
+            </div>
+            <div class="image-input">
+                <label for="imagetitle1">Image Title</label>
+                <input type="text" name="Photos[1].Title" id="imagetitle1">
+                <input type="file" name="Photos[1].Image" id="image1">
+            </div>
+            <div class="image-input">
+                <label for="imagetitle2">Image Title</label>
+                <input type="text" name="Photos[2].Title" id="imagetitle2">
+                <input type="file" name="Photos[2].Image" id="image2">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="create" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to MyAlbums", "MyAlbums", "Album")
+</div>
+
