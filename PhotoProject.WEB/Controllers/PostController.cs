@@ -128,7 +128,8 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<PostDTO, PostViewModel>());
+            Mapper.Initialize(cfg => cfg.CreateMap<PostDTO, PostViewModel>()
+             .ForMember(p => p.Photos, option => option.Ignore()));
             PostViewModel postVM = Mapper.Map<PostDTO, PostViewModel>(postDto);
 
             AlbumDTO albumDto = await albumService.FindByIdAsync(postVM.AlbumId);
@@ -154,18 +155,18 @@ namespace PhotoProject.WEB.Controllers
             postVM.Ratings = Mapper.Map<IQueryable<RatingDTO>, IEnumerable<RatingViewModel>>
                 (ratingService.GetAll().Where(x => x.PostId == id));
 
-            float averageRating = 0;
+            float ratingsSum = 0;
             int voteCounter = 0;
           
             foreach (var item in postVM.Ratings)
             {
                 UserDTO userDto = await userService.FindByIdAsync(item.UserId);
                 item.UserName = userDto.UserName;
-                averageRating += item.RatingValue;
+                ratingsSum += item.RatingValue;
                 voteCounter++;
             }
             
-            postVM.AverageRating = averageRating / voteCounter;
+            postVM.AverageRating = ratingsSum / voteCounter;
             postVM.VoteCounter = voteCounter;
             PostInfo postInfo = new PostInfo()
             {
@@ -183,6 +184,7 @@ namespace PhotoProject.WEB.Controllers
                     UserName = User.Identity.Name
                 }
             };
+
             return View(postInfo);
         }
 

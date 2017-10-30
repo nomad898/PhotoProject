@@ -24,10 +24,17 @@
             @Html.DisplayNameFor(model => model.Post.AverageRating)
         </dt>
         <dd class="text-field">
+            @if (float.IsNaN(@Model.Post.AverageRating))
+            {
+
+            }
+            else
+            {
             @Model.Post.AverageRating
+            }
         </dd>
        
-        @if (Model.Post.Photos.Count == 0)
+        @if (Model.Post.Photos.Count() == 0)
         {
             <dt>
                 no photos
