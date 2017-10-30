@@ -13,30 +13,13 @@ namespace PhotoProject.WEB.App_Start
 {
     public class Startup
     {
-        IServiceCreator serviceCreator = new ServiceCreator();
-
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext<IUserService>(CreateUserService);
-            app.CreatePerOwinContext<IRoleService>(CreateRoleService);
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
             });
-        }
-
-        private const string DB_NAME = "PhotoProjectDb";
-
-        private IUserService CreateUserService()
-        {
-            return serviceCreator.CreateUserService(DB_NAME);
-        }
-
-        private IRoleService CreateRoleService()
-        {
-            return serviceCreator.CreateRoleService(DB_NAME);
         }
     }
 }

@@ -3,8 +3,6 @@ using PhotoProject.BLL.Services;
 using PhotoProject.BLL.Services.Impl;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PhotoProject.WEB.Util.Ninject
@@ -37,7 +35,7 @@ namespace PhotoProject.WEB.Util.Ninject
             kernel.Bind<ICommentService>().To<CommentService>();
             kernel.Bind<IRatingService>().To<RatingService>();
             kernel.Bind<IUserService>().To<UserService>();
-            kernel.Bind<IRoleService>().To<RoleService>();
+            kernel.Bind<IRoleService>().To<RoleService>();       
         }
     }
 }

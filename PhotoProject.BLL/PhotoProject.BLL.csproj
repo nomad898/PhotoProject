@@ -80,14 +80,12 @@
     <Compile Include="Services\Impl\PostService.cs" />
     <Compile Include="Services\Impl\RatingService.cs" />
     <Compile Include="Services\Impl\RoleService.cs" />
-    <Compile Include="Services\Impl\ServiceCreator.cs" />
     <Compile Include="Services\Impl\UserService.cs" />
     <Compile Include="Services\IPhotoService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\IRatingService.cs" />
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\IService.cs" />
-    <Compile Include="Services\IServiceCreator.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>

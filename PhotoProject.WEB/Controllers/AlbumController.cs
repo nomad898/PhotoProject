@@ -31,32 +31,20 @@ namespace PhotoProject.WEB.Controllers
 
         public ActionResult Index()
         {
-            IQueryable<AlbumDTO> albumsDto = albumService.GetAll().Where(a => a.Public == true);
-            ICollection<AlbumViewModel> albumsVM = new List<AlbumViewModel>();
+            IQueryable<AlbumDTO> albumsDto =
+                albumService.GetAll().Where(a => a.Public == true);
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
-
-            foreach (var albumDto in albumsDto)
-            {
-                AlbumViewModel albumVM = Mapper.Map<AlbumDTO, AlbumViewModel>(albumDto);
-                albumsVM.Add(albumVM);
-            }
-
-            return View(albumsVM.AsEnumerable());
+            var albumsVM = Mapper.Map<IQueryable<AlbumDTO>, IEnumerable<AlbumViewModel>>(albumsDto);
+            return View(albumsVM);
         }
 
         public ActionResult MyAlbums()
         {
             IQueryable<AlbumDTO> albumsDto = albumService.GetAll()
                 .Where(x => x.UserId == User.Identity.GetUserId());
-            ICollection<AlbumViewModel> albumsVM = new List<AlbumViewModel>();
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
-
-            foreach (var albumDto in albumsDto)
-            {
-                AlbumViewModel albumVM = Mapper.Map<AlbumDTO, AlbumViewModel>(albumDto);
-                albumsVM.Add(albumVM);
-            }
-            return View(albumsVM.AsEnumerable());
+            var albumsVM = Mapper.Map<IQueryable<AlbumDTO>, IEnumerable<AlbumViewModel>>(albumsDto);
+            return View(albumsVM);
         }
 
         public async Task<ActionResult> Details(int? id)
@@ -65,15 +53,14 @@ namespace PhotoProject.WEB.Controllers
             {
                 return HttpNotFound();
             }
-
             AlbumDTO albumDto = await albumService.FindByIdAsync((int)id);
             if (albumDto == null)
             {
                 return HttpNotFound();
             }
-
-            Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
-            AlbumViewModel albumVM = Mapper.Map<AlbumDTO, AlbumViewModel>(albumDto);            
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>()
+            );
+            AlbumViewModel albumVM = Mapper.Map<AlbumDTO, AlbumViewModel>(albumDto);
 
             if (albumVM.Public == false && albumVM.UserId != User.Identity.GetUserId())
             {
@@ -85,19 +72,8 @@ namespace PhotoProject.WEB.Controllers
 
             IQueryable<PostDTO> posts = postService.GetAll()
                 .Where(x => x.AlbumId == albumDto.Id);
-            albumVM.Posts = new List<PostViewModel>();
-            foreach (var p in posts)
-            {
-                PostViewModel post = new PostViewModel()
-                {
-                    AlbumId = p.AlbumId,
-                    CreatedAt = p.CreatedAt,
-                    Description = p.Description,
-                    Id = p.Id,
-                    UserId = albumDto.UserId
-                };
-                albumVM.Posts.Add(post);
-            }
+            Mapper.Initialize(cfg => cfg.CreateMap<PostDTO, PostViewModel>());
+            albumVM.Posts = Mapper.Map<IQueryable<PostDTO>, IEnumerable<PostViewModel>>(posts);
 
             return View(albumVM);
         }

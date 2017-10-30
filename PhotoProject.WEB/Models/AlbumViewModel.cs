@@ -15,6 +15,11 @@ namespace PhotoProject.WEB.Models
         public bool Public { get; set; }
         public string UserName { get; set; }
         public string UserId { get; set; }
-        public ICollection<PostViewModel> Posts { get; set; }
+        public IEnumerable<PostViewModel> Posts { get; set; }
+
+        public AlbumViewModel()
+        {
+            Posts = new List<PostViewModel>();
+        }
     }  
 }

@@ -128,8 +128,7 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            Mapper.Initialize(cfg => cfg.CreateMap<PostDTO, PostViewModel>()
-            .ForMember(x => x.Photos, option => option.Ignore())); ;
+            Mapper.Initialize(cfg => cfg.CreateMap<PostDTO, PostViewModel>());
             PostViewModel postVM = Mapper.Map<PostDTO, PostViewModel>(postDto);
 
             AlbumDTO albumDto = await albumService.FindByIdAsync(postVM.AlbumId);
@@ -138,51 +137,34 @@ namespace PhotoProject.WEB.Controllers
             {
                 return View("PrivateAlbum");
             }
-            postVM.Photos = new List<PhotoViewModel>();
-            postVM.Comments = new List<CommentViewModel>();
-            postVM.Ratings = new List<RatingViewModel>();
-            foreach (var item in postDto.Photos)
+            Mapper.Initialize(cfg => cfg.CreateMap<PhotoDTO, PhotoViewModel>());
+            postVM.Photos = Mapper.Map<ICollection<PhotoDTO>, IEnumerable<PhotoViewModel>>(postDto.Photos);
+
+            Mapper.Initialize(cfg => cfg.CreateMap<CommentDTO, CommentViewModel>());
+            postVM.Comments = Mapper.Map<IQueryable<CommentDTO>, IEnumerable<CommentViewModel>>
+                (commentService.GetAll().Where(x => x.PostId == id));                       
+
+            foreach (var item in postVM.Comments)
             {
-                postVM.Photos.Add(new PhotoViewModel()
-                {
-                    Content = item.Content,
-                    Id = item.Id,
-                    PostId = item.PostId,
-                    Title = item.Title
-                });
+                UserDTO userDto = await userService.FindByIdAsync(item.UserId);                
+                item.UserName = userDto.UserName;
             }
 
-            foreach (var item in commentService.GetAll().Where(x => x.PostId == id).ToList())
-            {
-                UserDTO userDto = await userService.FindByIdAsync(item.UserId);
-                postVM.Comments.Add(new CommentViewModel()
-                {
-                    Content = item.Content,
-                    CreatedAt = item.CreatedAt,
-                    Id = item.Id,
-                    PostId = item.PostId,
-                    UserId = item.UserId,
-                    UserName = userDto.UserName
-                });
-            }
+            Mapper.Initialize(cfg => cfg.CreateMap<RatingDTO, RatingViewModel>());
+            postVM.Ratings = Mapper.Map<IQueryable<RatingDTO>, IEnumerable<RatingViewModel>>
+                (ratingService.GetAll().Where(x => x.PostId == id));
 
             float averageRating = 0;
             int voteCounter = 0;
-            foreach (var item in ratingService.GetAll().Where(x => x.PostId == id).ToList())
+          
+            foreach (var item in postVM.Ratings)
             {
                 UserDTO userDto = await userService.FindByIdAsync(item.UserId);
-                postVM.Ratings.Add(new RatingViewModel()
-                {                    
-                    Id = item.Id,
-                    RatingValue = item.RatingValue,
-                    PostId = item.PostId,
-                    UserId = item.UserId,
-                    UserName = userDto.UserName
-                });
+                item.UserName = userDto.UserName;
                 averageRating += item.RatingValue;
                 voteCounter++;
             }
-
+            
             postVM.AverageRating = averageRating / voteCounter;
             postVM.VoteCounter = voteCounter;
             PostInfo postInfo = new PostInfo()
@@ -191,7 +173,8 @@ namespace PhotoProject.WEB.Controllers
                 Rating = new RatingViewModel()
                 {
                     PostId = (int)id,
-                    UserId = postVM.UserId
+                    UserId = postVM.UserId,
+                    UserName = User.Identity.Name
                 },
                 Comment = new CommentViewModel()
                 {

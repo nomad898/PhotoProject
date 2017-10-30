@@ -19,9 +19,8 @@ namespace PhotoProject.BLL.Services.Impl
         }
 
         public async Task<OperationDetails> CreateAsync(AlbumDTO item)
-        {
+        {          
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, Album>());
-
             Album album = Mapper.Map<AlbumDTO, Album>(item);
 
             if (album != null)

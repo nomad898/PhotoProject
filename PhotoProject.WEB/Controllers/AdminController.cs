@@ -17,7 +17,7 @@ namespace PhotoProject.WEB.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly IUserService userService;         
+        private readonly IUserService userService;
 
         public AdminController(IUserService userService)
         {
@@ -26,20 +26,11 @@ namespace PhotoProject.WEB.Controllers
 
         public ActionResult Index()
         {
-            IQueryable<UserDTO> usersDto = userService.GetAll();
-            ICollection<UserViewModel> usersVM = new List<UserViewModel>();
+            IQueryable<UserDTO> usersDto =
+                userService.GetAll().Where(u => u.UserName != User.Identity.Name && u.Role != "Admin");
             Mapper.Initialize(cfg => cfg.CreateMap<UserDTO, UserViewModel>());
-
-            foreach (var user in usersDto)
-            {
-                if (user.UserName != User.Identity.Name &&
-                    user.Role != "Admin")
-                {
-                    UserViewModel userVM = Mapper.Map<UserDTO, UserViewModel>(user);
-                    usersVM.Add(userVM);
-                }
-            }
-            return View(usersVM.AsEnumerable());
+            var usersVM = Mapper.Map<IQueryable<UserDTO>, IEnumerable<UserViewModel>>(usersDto);
+            return View(usersVM);
         }
 
         [HttpPost]

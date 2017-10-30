@@ -21,9 +21,16 @@ namespace PhotoProject.WEB.Models
         public string UserId { get; set; }
         public float AverageRating { get; set; }
         public int VoteCounter { get; set; }
-        public ICollection<PhotoViewModel> Photos { get; set; }
-        public ICollection<CommentViewModel> Comments { get; set; }
-        public ICollection<RatingViewModel> Ratings { get; set; }
+        public IEnumerable<PhotoViewModel> Photos { get; set; }
+        public IEnumerable<CommentViewModel> Comments { get; set; }
+        public IEnumerable<RatingViewModel> Ratings { get; set; }
+
+        public PostViewModel()
+        {
+            Photos = new List<PhotoViewModel>();
+            Comments = new List<CommentViewModel>();
+            Ratings = new List<RatingViewModel>();
+        }
     }
 
     public class CreatePostViewModel
