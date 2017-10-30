@@ -1,24 +1,53 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+ 
+    background: url("/Images/back2.jpg") no-repeat 50%;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 670px;
+    padding: 90px 0;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
-/* Set padding to keep content from hitting the edges */
+#brand {
+    height: 100%;
+    padding: 15px; 
+    width: auto;
+}
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.text-field {
+    color: #fff;
+}
+
+.caption {
+    position: center;
+    padding-bottom: 50%;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: #000;
+}
+
+.border {
+    background-color: #111;
+    color: #fff;
+    padding: 18px;
+    font-size: 30px;
+    letter-spacing: 10px;
 }

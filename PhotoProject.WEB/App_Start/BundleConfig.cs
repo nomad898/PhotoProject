@@ -29,7 +29,7 @@ namespace PhotoProject.WEB
                       "~/Content/site.css"));
                      
 
-            bundles.Add(new ScriptBundle("~/bundles/addimage").Include(
+            bundles.Add(new ScriptBundle("~/bundles/register").Include(
                     "~/Scripts/addimage.js"
                     ));      
         }

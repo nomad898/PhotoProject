@@ -3,22 +3,24 @@
     ViewBag.Title = "Log in to your account";
 }
 
-<h2>Log In</h2>
+<h2 class="text-field">Log In</h2>
 
-@Html.ValidationSummary()
+<div class="row">
+    @Html.ValidationSummary(true, "", new { @style = "color: red" })
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken();
-    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
-    <div class="form-group">
-        <label>Username</label>
-        @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
-    </div>
-    <div class="form-group">
-        <label>Password</label>
-        @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken();
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+        <div class="form-group">
+            <label class="text-field">Username</label>
+            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label class="text-field">Password</label>
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
 
-    </div>
+        </div>
         <button class="btn btn-primary" type="submit">Log In</button>
-}
+    }
+</div>

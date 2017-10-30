@@ -1,33 +1,37 @@
 ﻿@model PhotoProject.WEB.Models.RegisterViewModel
 @section scripts{
-    @Scripts.Render("~/bundles/addimage")
+    @Scripts.Render("~/bundles/register")
 }
 @{
     ViewBag.Title = "Sign Up";
 }
 
 <div class="row">
-    @Html.ValidationSummary()
+
+    <h2 class="text-field">Sign Up</h2>
+
+    @Html.ValidationSummary(true, "", new { @style = "color: red" })
 
     @using (Html.BeginForm("Register", "Account", FormMethod.Post,
-        new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                        new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken();
         <div class="form-group">
-            <label>Username</label>
-            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+            <label class="text-field">Username</label>
+            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control", @id = "password" })
         </div>
 
         <div class="form-group">
-            <label>Password</label>
-            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+            <label class="text-field">Password</label>
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control", @id = "confirm_password" })
         </div>
         <div class="form-group">
-            <label>Confirm password</label>
+            <label class="text-field">Confirm password</label>
             @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
         </div>
+        <span id='message'></span>
         <div class="form-group">
-            @Html.LabelFor(x => x.Avatar, new { @class = "col-md-2 control-label" })
+            @Html.LabelFor(x => x.Avatar, new { @class = "text-field" })
             <div class="col-md-10">
                 <input type="file" name="Avatar" id="Avatar" onchange="loadFile(event)" accept=".png,.jpg,.jpeg,.gif,.tif" />
                 <img id="avatarImg" src="#" alt=" " style="width:200px; height:200px; " />
@@ -36,5 +40,3 @@
         <button type="submit" class="btn btn-primary">Sign Up</button>
     }
 </div>
-
-

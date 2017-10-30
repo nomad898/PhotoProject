@@ -4,26 +4,26 @@
 @{
     ViewBag.Title = @Model.Post.Description;
 }
-<h2>@Model.Post.Description</h2>
+<h2 class="text-field">@Model.Post.Description</h2>
 <div>
     <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Post.CreatedAt)          
         </dt>
-        <dd>
+        <dd class="text-field">
             @Model.Post.CreatedAt
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Post.VoteCounter)
         </dt>
-        <dd>
+        <dd class="text-field">
             @Model.Post.VoteCounter
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Post.AverageRating)
         </dt>
-        <dd>
+        <dd class="text-field">
             @Model.Post.AverageRating
         </dd>
        
@@ -40,7 +40,7 @@
                 <dt>
                     @Html.DisplayNameFor(x => item.Title)
                 </dt>
-                <dd>
+                <dd class="text-field">
                     @item.Title
                 </dd>
                 <dt>
@@ -62,5 +62,5 @@
     
 </div>
 <p>
-    @Html.ActionLink("Back to album details", "Details", "Album", new { id = Model.Post.AlbumId }, null)
+    @Html.ActionLink("Back to album details", "Details", "Album", new { id = Model.Post.AlbumId }, new {@class= "btn btn-default" })
 </p>

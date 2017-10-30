@@ -99,6 +99,9 @@ namespace PhotoProject.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
+                ViewBag.Password = registerViewModel.Password;
+                ViewBag.ConfirmPassword = registerViewModel.ConfirmPassword;
+
                 byte[] avatarData = null;
 
                 avatarData = ImageConverter.ConvertImage(registerViewModel.Avatar);
@@ -126,8 +129,7 @@ namespace PhotoProject.WEB.Controllers
             return View(registerViewModel);
         }
         #endregion
-
-        // GET: Account
+        
         public ActionResult Index()
         {
             return RedirectToAction("Details");

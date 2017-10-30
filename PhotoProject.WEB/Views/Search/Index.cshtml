@@ -8,8 +8,10 @@
     @Html.TextBox("Title")<input type="submit" value="Search" />
 }
 
-<table class="table table-striped">
-    <thead>
+
+<div class="panel panel-primary">
+  
+    <table class="table table-striped">
         <tr>
             <th>
                 Album Title
@@ -21,29 +23,29 @@
                 Link
             </th>
         </tr>
-    </thead>
-    <tbody>
-        @if (Model.Count() == 0)
-        {
-            <tr>
-                <td colspan="3" style="color: red">
-                    No albums
-                </td>
-            </tr>
-        }
-        else
-        {
-            foreach (var item in Model)
+        <tbody>
+            @if (Model.Count() == 0)
             {
                 <tr>
-                    <td>@item.Title</td>
-                    <td>@item.UserName</td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", "Album", new { id = item.Id },
-                         new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
-                </td>
-            </tr>
+                    <td colspan="3" style="color: red">
+                        No albums
+                    </td>
+                </tr>
             }
-        }
-    </tbody>
-</table>
+            else
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.UserName</td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", "Album", new { id = item.Id },
+                         new { @class = "btn btn-primary btn-xs", style = "float: left; margin-right: 10px" })
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

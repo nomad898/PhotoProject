@@ -3,11 +3,11 @@
     ViewBag.Title = "User Edit";
 }
 
-<h2>Edit User</h2>
+<h2 class="text-field">Edit User @Model.UserName</h2>
 
 <div class="form-group">
-    <label>Id</label>
-    <p class="form-control-static">@Model.Id</p>
+    <label class="text-field">Id</label>
+    <p class="form-control-static text-field">@Model.Id</p>
 </div>
 
 
@@ -22,11 +22,11 @@
     @Html.HiddenFor(model => model.Role)
     @Html.AntiForgeryToken()
     <div class="form-group">
-        @Html.LabelFor(x => x.UserName)
+        @Html.LabelFor(x => x.UserName, new { @class ="text-field"})
         @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
     </div>
     <div class="form-group">
-        @Html.LabelFor(x => x.Password)
+        @Html.LabelFor(x => x.Password, new { @class = "text-field" })
         @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
