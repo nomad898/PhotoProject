@@ -15,26 +15,22 @@ namespace PhotoProject.WEB.Controllers
     [Authorize]
     public class SearchController : Controller
     {
-        private IUserService UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
+        private readonly IUserService userService;
+        private readonly IAlbumService albumService;
+        private readonly IPostService postService;
 
-        private IAlbumService AlbumService;
-        private IPostService PostService;
-
-        public SearchController(IPostService postService, IAlbumService albumService)
+        public SearchController(IUserService userService,
+            IPostService postService,
+            IAlbumService albumService)
         {
-            PostService = postService;
-            AlbumService = albumService;
+            this.userService = userService;
+            this.postService = postService;
+            this.albumService = albumService;
         }
 
         public ActionResult Index()
         {
-            var albumsDto = AlbumService.GetAll()
+            var albumsDto = albumService.GetAll()
                 .Where(a => a.Public == true);
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
             ICollection<AlbumViewModel> albums = new List<AlbumViewModel>();
@@ -53,7 +49,7 @@ namespace PhotoProject.WEB.Controllers
         [HttpPost]
         public async Task<ActionResult> Index(string title)
         {
-            var albumsDto = AlbumService.GetAll()
+            var albumsDto = albumService.GetAll()
                 .Where(a => a.Title == title || title == null);
             ICollection<AlbumViewModel> albums = new List<AlbumViewModel>();
 
@@ -61,7 +57,7 @@ namespace PhotoProject.WEB.Controllers
             {
                 foreach (var albumDto in albumsDto)
                 {
-                    UserDTO user = await UserService.FindByIdAsync(albumDto.UserId);
+                    UserDTO user = await userService.FindByIdAsync(albumDto.UserId);
                     AlbumViewModel albumVM = new AlbumViewModel()
                     {
                         CreatedAt = albumDto.CreatedAt,

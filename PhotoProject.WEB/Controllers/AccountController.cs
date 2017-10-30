@@ -20,13 +20,7 @@ namespace PhotoProject.WEB.Controllers
     [Authorize(Roles = "Admin, User")]
     public class AccountController : Controller
     {
-        private IUserService UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
+        private readonly IUserService userService;        
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -34,6 +28,12 @@ namespace PhotoProject.WEB.Controllers
                 return HttpContext.GetOwinContext().Authentication;
             }
         }
+
+        public AccountController(IUserService userService)
+        {
+            this.userService = userService;
+        }
+
         #region Login
         [AllowAnonymous]
         public ActionResult Login()
@@ -57,7 +57,7 @@ namespace PhotoProject.WEB.Controllers
                     UserName = model.UserName,
                     Password = model.Password
                 };
-                ClaimsIdentity claim = await UserService.AuthenticateAsync(userDto);
+                ClaimsIdentity claim = await userService.AuthenticateAsync(userDto);
                 if (claim == null)
                 {
                     ModelState.AddModelError("", "Wrong login or password.");
@@ -99,12 +99,7 @@ namespace PhotoProject.WEB.Controllers
         {
             if (ModelState.IsValid)
             {
-                ViewBag.Password = registerViewModel.Password;
-                ViewBag.ConfirmPassword = registerViewModel.ConfirmPassword;
-
-                byte[] avatarData = null;
-
-                avatarData = ImageConverter.ConvertImage(registerViewModel.Avatar);
+                byte[] avatarData = ImageConverter.ConvertImage(registerViewModel.Avatar);
 
                 UserDTO userDto = new UserDTO
                 {
@@ -115,7 +110,7 @@ namespace PhotoProject.WEB.Controllers
                     Avatar = avatarData
                 };
 
-                OperationDetails operationDetails = await UserService.CreateAsync(userDto);
+                OperationDetails operationDetails = await userService.CreateAsync(userDto);
 
                 if (operationDetails.Succeeded)
                 {
@@ -146,7 +141,7 @@ namespace PhotoProject.WEB.Controllers
 
         private async Task<UserDTO> GetCurrentUserAsync()
         {
-            return await UserService.FindByIdAsync(User.Identity.GetUserId());
+            return await userService.FindByIdAsync(User.Identity.GetUserId());
         }
     }
 }

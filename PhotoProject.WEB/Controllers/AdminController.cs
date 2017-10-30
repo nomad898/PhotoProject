@@ -17,17 +17,16 @@ namespace PhotoProject.WEB.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private IUserService UserService
+        private readonly IUserService userService;         
+
+        public AdminController(IUserService userService)
         {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
+            this.userService = userService;
         }
 
         public ActionResult Index()
         {
-            IQueryable<UserDTO> usersDto = UserService.GetAll();
+            IQueryable<UserDTO> usersDto = userService.GetAll();
             ICollection<UserViewModel> usersVM = new List<UserViewModel>();
             Mapper.Initialize(cfg => cfg.CreateMap<UserDTO, UserViewModel>());
 
@@ -46,11 +45,11 @@ namespace PhotoProject.WEB.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
-            UserDTO userDto = await UserService.FindByIdAsync(id);
+            UserDTO userDto = await userService.FindByIdAsync(id);
 
             if (userDto != null)
             {
-                var result = await UserService.DeleteByIdAsync(userDto.Id);
+                var result = await userService.DeleteByIdAsync(userDto.Id);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -74,22 +73,14 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            UserDTO userDto = await UserService.FindByIdAsync(id);
+            UserDTO userDto = await userService.FindByIdAsync(id);
 
             if (userDto == null)
             {
                 return HttpNotFound();
             }
-
-            UserViewModel userVM = new UserViewModel()
-            {
-                Avatar = userDto.Avatar,
-                CreatedAt = userDto.CreatedAt,
-                Id = userDto.Id,
-                Password = userDto.Password,
-                Role = userDto.Role,
-                UserName = userDto.UserName
-            };
+            Mapper.Initialize(cfg => cfg.CreateMap<UserDTO, UserViewModel>());
+            UserViewModel userVM = Mapper.Map<UserDTO, UserViewModel>(userDto);
             if (userVM != null)
             {
                 return View(userVM);
@@ -111,7 +102,7 @@ namespace PhotoProject.WEB.Controllers
                 if (userDto != null)
                 {
                     OperationDetails result
-                        = await UserService.UpdateAsync(userDto);
+                        = await userService.UpdateAsync(userDto);
 
                     if (result.Succeeded)
                     {

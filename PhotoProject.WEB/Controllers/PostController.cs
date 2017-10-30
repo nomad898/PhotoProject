@@ -19,30 +19,26 @@ namespace PhotoProject.WEB.Controllers
     [Authorize(Roles = "Admin, User")]
     public class PostController : Controller
     {
-        private IUserService UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
-        private IAlbumService AlbumService;
-        private IPostService PostService;
-        private IPhotoService PhotoService;
-        private ICommentService CommentService;
-        private IRatingService RatingService;
+        private readonly IUserService userService;
+        private readonly IAlbumService albumService;
+        private readonly IPostService postService;
+        private readonly IPhotoService photoService;
+        private readonly ICommentService commentService;
+        private readonly IRatingService ratingService;
 
-        public PostController(IPostService postService,
+        public PostController(IUserService userService, 
+            IPostService postService,
             IAlbumService albumService,
             IPhotoService photoService,
             ICommentService commentService,
             IRatingService ratingService)
         {
-            PostService = postService;
-            AlbumService = albumService;
-            PhotoService = photoService;
-            CommentService = commentService;
-            RatingService = ratingService;
+            this.userService = userService;
+            this.postService = postService;
+            this.albumService = albumService;
+            this.photoService = photoService;
+            this.commentService = commentService;
+            this.ratingService = ratingService;
         }
 
         [HttpGet]
@@ -52,7 +48,7 @@ namespace PhotoProject.WEB.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync((int)id);
+            AlbumDTO albumDto = await albumService.FindByIdAsync((int)id);
             if (albumDto == null)
             {
                 return HttpNotFound();
@@ -105,7 +101,7 @@ namespace PhotoProject.WEB.Controllers
                     }
                 }
 
-                var result = await PostService.CreateAsync(postDto);
+                var result = await postService.CreateAsync(postDto);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("MyAlbums", "Album");
@@ -125,7 +121,7 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            PostDTO postDto = await PostService.FindByIdAsync((int)id);
+            PostDTO postDto = await postService.FindByIdAsync((int)id);
 
             if (postDto == null)
             {
@@ -136,7 +132,7 @@ namespace PhotoProject.WEB.Controllers
             .ForMember(x => x.Photos, option => option.Ignore())); ;
             PostViewModel postVM = Mapper.Map<PostDTO, PostViewModel>(postDto);
 
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync(postVM.AlbumId);
+            AlbumDTO albumDto = await albumService.FindByIdAsync(postVM.AlbumId);
 
             if (albumDto.Public == false && albumDto.UserId != User.Identity.GetUserId())
             {
@@ -156,9 +152,9 @@ namespace PhotoProject.WEB.Controllers
                 });
             }
 
-            foreach (var item in CommentService.GetAll().Where(x => x.PostId == id).ToList())
+            foreach (var item in commentService.GetAll().Where(x => x.PostId == id).ToList())
             {
-                UserDTO userDto = await UserService.FindByIdAsync(item.UserId);
+                UserDTO userDto = await userService.FindByIdAsync(item.UserId);
                 postVM.Comments.Add(new CommentViewModel()
                 {
                     Content = item.Content,
@@ -172,9 +168,9 @@ namespace PhotoProject.WEB.Controllers
 
             float averageRating = 0;
             int voteCounter = 0;
-            foreach (var item in RatingService.GetAll().Where(x => x.PostId == id).ToList())
+            foreach (var item in ratingService.GetAll().Where(x => x.PostId == id).ToList())
             {
-                UserDTO userDto = await UserService.FindByIdAsync(item.UserId);
+                UserDTO userDto = await userService.FindByIdAsync(item.UserId);
                 postVM.Ratings.Add(new RatingViewModel()
                 {                    
                     Id = item.Id,
@@ -211,11 +207,11 @@ namespace PhotoProject.WEB.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            PostDTO postDto = await PostService.FindByIdAsync(id);
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync(postDto.AlbumId);
+            PostDTO postDto = await postService.FindByIdAsync(id);
+            AlbumDTO albumDto = await albumService.FindByIdAsync(postDto.AlbumId);
             if (albumDto.UserId == User.Identity.GetUserId())
             {
-                await PostService.DeleteByIdAsync(id);
+                await postService.DeleteByIdAsync(id);
             }
             return RedirectToAction("Details", albumDto.Id);
         }
@@ -231,7 +227,7 @@ namespace PhotoProject.WEB.Controllers
                 commentVM.UserName = User.Identity.Name;
                 Mapper.Initialize(cfg => cfg.CreateMap<CommentViewModel, CommentDTO>());
                 CommentDTO commentDto = Mapper.Map<CommentViewModel, CommentDTO>(commentVM);
-                OperationDetails result = await CommentService.CreateAsync(commentDto);
+                OperationDetails result = await commentService.CreateAsync(commentDto);
 
                 if (result.Succeeded)
                 {
@@ -252,18 +248,18 @@ namespace PhotoProject.WEB.Controllers
             if (ModelState.IsValid)
             {
                 ratingVM.UserId = User.Identity.GetUserId();
-                RatingDTO rDto = await RatingService.FindByUserIdAsync(ratingVM.UserId);
+                RatingDTO rDto = await ratingService.FindByUserIdAsync(ratingVM.UserId);
                 if (rDto != null)
                 {
-                    await RatingService.DeleteByIdAsync(rDto.Id);
+                    await ratingService.DeleteByIdAsync(rDto.Id);
                 }
                 Mapper.Initialize(cfg => cfg.CreateMap<RatingViewModel, RatingDTO>());
 
                 RatingDTO ratingDto = Mapper.Map<RatingViewModel, RatingDTO>(ratingVM);
                
-                OperationDetails result = await RatingService.CreateAsync(ratingDto);
+                OperationDetails result = await ratingService.CreateAsync(ratingDto);
 
-                RatingDTO r = await RatingService.FindByUserIdAsync(ratingVM.UserId);
+                RatingDTO r = await ratingService.FindByUserIdAsync(ratingVM.UserId);
 
                 if (result.Succeeded)
                 {

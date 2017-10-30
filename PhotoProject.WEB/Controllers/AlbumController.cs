@@ -18,26 +18,20 @@ namespace PhotoProject.WEB.Controllers
     [Authorize(Roles = "Admin, User")]
     public class AlbumController : Controller
     {
-        private IUserService UserService
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().GetUserManager<IUserService>();
-            }
-        }
+        private readonly IUserService userService;
+        private readonly IAlbumService albumService;
+        private readonly IPostService postService;
 
-        private IAlbumService AlbumService;
-        private IPostService PostService;
-
-        public AlbumController(IPostService postService, IAlbumService albumService)
+        public AlbumController(IUserService userService, IPostService postService, IAlbumService albumService)
         {
-            PostService = postService;
-            AlbumService = albumService;
+            this.userService = userService;
+            this.postService = postService;
+            this.albumService = albumService;
         }
 
         public ActionResult Index()
         {
-            IQueryable<AlbumDTO> albumsDto = AlbumService.GetAll().Where(a => a.Public == true);
+            IQueryable<AlbumDTO> albumsDto = albumService.GetAll().Where(a => a.Public == true);
             ICollection<AlbumViewModel> albumsVM = new List<AlbumViewModel>();
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
 
@@ -52,7 +46,7 @@ namespace PhotoProject.WEB.Controllers
 
         public ActionResult MyAlbums()
         {
-            IQueryable<AlbumDTO> albumsDto = AlbumService.GetAll()
+            IQueryable<AlbumDTO> albumsDto = albumService.GetAll()
                 .Where(x => x.UserId == User.Identity.GetUserId());
             ICollection<AlbumViewModel> albumsVM = new List<AlbumViewModel>();
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
@@ -72,7 +66,7 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync((int)id);
+            AlbumDTO albumDto = await albumService.FindByIdAsync((int)id);
             if (albumDto == null)
             {
                 return HttpNotFound();
@@ -86,10 +80,10 @@ namespace PhotoProject.WEB.Controllers
                 return View("PrivateAlbum");
             }
 
-            UserDTO userDto = await UserService.FindByIdAsync(albumDto.UserId);
+            UserDTO userDto = await userService.FindByIdAsync(albumDto.UserId);
             albumVM.UserName = userDto.UserName;
 
-            IQueryable<PostDTO> posts = PostService.GetAll()
+            IQueryable<PostDTO> posts = postService.GetAll()
                 .Where(x => x.AlbumId == albumDto.Id);
             albumVM.Posts = new List<PostViewModel>();
             foreach (var p in posts)
@@ -125,7 +119,7 @@ namespace PhotoProject.WEB.Controllers
                 Mapper.Initialize(cfg => cfg.CreateMap<AlbumViewModel, AlbumDTO>());
                 AlbumDTO albumDto = Mapper.Map<AlbumViewModel, AlbumDTO>(albumVM);
 
-                var result = await AlbumService.CreateAsync(albumDto);
+                var result = await albumService.CreateAsync(albumDto);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -142,10 +136,10 @@ namespace PhotoProject.WEB.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync(id);
+            AlbumDTO albumDto = await albumService.FindByIdAsync(id);
             if (albumDto.UserId == User.Identity.GetUserId())
             {
-                await AlbumService.DeleteByIdAsync(id);
+                await albumService.DeleteByIdAsync(id);
             }
             return RedirectToAction("MyAlbums");
         }
@@ -158,7 +152,7 @@ namespace PhotoProject.WEB.Controllers
                 return HttpNotFound();
             }
 
-            AlbumDTO albumDto = await AlbumService.FindByIdAsync((int)id);
+            AlbumDTO albumDto = await albumService.FindByIdAsync((int)id);
 
             if (albumDto == null)
             {
@@ -182,7 +176,7 @@ namespace PhotoProject.WEB.Controllers
                 Mapper.Initialize(cfg => cfg.CreateMap<AlbumViewModel, AlbumDTO>());
                 AlbumDTO albumDto = Mapper.Map<AlbumViewModel, AlbumDTO>(albumVM);
 
-                var result = await AlbumService.UpdateByIdAsync(albumDto);
+                var result = await albumService.UpdateByIdAsync(albumDto);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
