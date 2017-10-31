@@ -27,16 +27,17 @@ namespace PhotoProject.WEB.Models
 
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "You have to enter user login")]
         public string UserName { get; set; }
         [Display(Name = "Avatar")]
         public HttpPostedFileBase Avatar { get; set; }
-        [Required]
+        [Required(ErrorMessage = "You have to enter valid user password")]
+        [StringLength(16, MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Passwords don't match")]
         public string ConfirmPassword { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@model PhotoProject.WEB.Models.RegisterViewModel
-@section scripts{
+@section Scripts{
     @Scripts.Render("~/bundles/register")
+    @Scripts.Render("~/bundles/jqueryval")
 }
 @{
     ViewBag.Title = "Sign Up";
@@ -13,21 +14,25 @@
     @Html.ValidationSummary(true, "", new { @style = "color: red" })
 
     @using (Html.BeginForm("Register", "Account", FormMethod.Post,
-                                                        new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+                                                                new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken();
         <div class="form-group">
             <label class="text-field">Username</label>
-            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control", @id = "password" })
+            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
         </div>
 
         <div class="form-group">
             <label class="text-field">Password</label>
-            @Html.PasswordFor(x => x.Password, new { @class = "form-control", @id = "confirm_password" })
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control", @id = "password"})
+            @Html.ValidationMessageFor(m => m.Password)
         </div>
         <div class="form-group">
             <label class="text-field">Confirm password</label>
-            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", @id = "confirm_password",
+           @onkeyup = "checkPass(); return false" })
+            <span id="confirmMessage" class="confirmMessage"></span>
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
         </div>
         <span id='message'></span>
         <div class="form-group">

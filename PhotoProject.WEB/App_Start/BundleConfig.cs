@@ -30,7 +30,8 @@ namespace PhotoProject.WEB
                      
 
             bundles.Add(new ScriptBundle("~/bundles/register").Include(
-                    "~/Scripts/addimage.js"
+                    "~/Scripts/addimage.js",
+                    "~/Scripts/checkpass.js"
                     ));      
         }
     }

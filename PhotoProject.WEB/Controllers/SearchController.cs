@@ -30,20 +30,11 @@ namespace PhotoProject.WEB.Controllers
 
         public ActionResult Index()
         {
-            var albumsDto = albumService.GetAll()
+            IQueryable<AlbumDTO> albumsDto = albumService.GetAll()
                 .Where(a => a.Public == true);
             Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
-            ICollection<AlbumViewModel> albums = new List<AlbumViewModel>();
-
-            if (albumsDto != null)
-            {
-                foreach (var albumDto in albumsDto)
-                {
-                    AlbumViewModel albumVM = Mapper.Map<AlbumDTO, AlbumViewModel>(albumDto);
-                    albums.Add(albumVM);
-                }
-            }
-            return View(albums.AsEnumerable());
+            var albumsVM = Mapper.Map<IQueryable<AlbumDTO>, IEnumerable<AlbumViewModel>>(albumsDto);
+            return View(albumsVM);
         }
 
         [HttpPost]
@@ -51,27 +42,14 @@ namespace PhotoProject.WEB.Controllers
         {
             var albumsDto = albumService.GetAll()
                 .Where(a => a.Title == title || title == null);
-            ICollection<AlbumViewModel> albums = new List<AlbumViewModel>();
-
-            if (albumsDto != null)
+            Mapper.Initialize(cfg => cfg.CreateMap<AlbumDTO, AlbumViewModel>());
+            var albumsVM = Mapper.Map<IQueryable<AlbumDTO>, IEnumerable<AlbumViewModel>>(albumsDto);
+            foreach (var album in albumsVM)
             {
-                foreach (var albumDto in albumsDto)
-                {
-                    UserDTO user = await userService.FindByIdAsync(albumDto.UserId);
-                    AlbumViewModel albumVM = new AlbumViewModel()
-                    {
-                        CreatedAt = albumDto.CreatedAt,
-                        Description = albumDto.Description,
-                        Id = albumDto.Id,
-                        Public = albumDto.Public,
-                        Title = albumDto.Title,
-                        UserId = albumDto.UserId,
-                        UserName = user.UserName
-                    };
-                    albums.Add(albumVM);
-                }
+                UserDTO user = await userService.FindByIdAsync(album.UserId);
+                album.UserName = user.UserName;      
             }
-            return View(albums.AsEnumerable());
+            return View(albumsVM);
         }
     }
 }
