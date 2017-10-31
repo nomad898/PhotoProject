@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using PhotoProject.BLL.DTO;
 using PhotoProject.DAL.Repositories;
 using AutoMapper;
 using PhotoProject.DAL.Entities;
-using PhotoProject.BLL.Util;
+using PhotoProject.BLL.Infrastructure;
 
 namespace PhotoProject.BLL.Services.Impl
 {

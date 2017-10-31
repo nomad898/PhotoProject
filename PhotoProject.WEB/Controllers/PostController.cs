@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using PhotoProject.BLL.DTO;
+using PhotoProject.BLL.Infrastructure;
 using PhotoProject.BLL.Services;
-using PhotoProject.BLL.Util;
 using PhotoProject.WEB.Models;
-using PhotoProject.WEB.Util.Helpers;
+using PhotoProject.WEB.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PhotoProject.WEB.Controllers

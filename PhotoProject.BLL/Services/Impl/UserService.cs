@@ -7,7 +7,7 @@ using AutoMapper;
 using PhotoProject.DAL.Entities;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using PhotoProject.BLL.Util;
+using PhotoProject.BLL.Infrastructure;
 
 namespace PhotoProject.BLL.Services.Impl
 {

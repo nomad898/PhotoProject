@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace PhotoProject.WEB.Util.Helpers
+namespace PhotoProject.WEB.Infrastructure.Helpers
 {
     public static class ImageConverter
     {

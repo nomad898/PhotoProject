@@ -5,7 +5,7 @@ using PhotoProject.BLL.DTO;
 using PhotoProject.DAL.Repositories;
 using AutoMapper;
 using PhotoProject.DAL.Entities;
-using PhotoProject.BLL.Util;
+using PhotoProject.BLL.Infrastructure;
 
 namespace PhotoProject.BLL.Services.Impl
 {

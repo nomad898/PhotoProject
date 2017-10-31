@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PhotoProject.DAL.Util
+﻿namespace PhotoProject.DAL.Util
 {
     public static class MyConstants
     {

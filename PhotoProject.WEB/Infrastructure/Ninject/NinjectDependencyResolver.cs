@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace PhotoProject.WEB.Util.Ninject
+namespace PhotoProject.WEB.Infrastructure.Ninject
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {

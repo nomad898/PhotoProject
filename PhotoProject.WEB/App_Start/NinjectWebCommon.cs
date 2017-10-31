@@ -10,7 +10,7 @@ namespace PhotoProject.WEB.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using PhotoProject.BLL.Util;
+    using PhotoProject.BLL.Infrastructure;
 
     public static class NinjectWebCommon
     {
@@ -68,7 +68,7 @@ namespace PhotoProject.WEB.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             System.Web.Mvc.DependencyResolver.SetResolver
-               (new Util.Ninject.NinjectDependencyResolver(kernel));
+               (new Infrastructure.Ninject.NinjectDependencyResolver(kernel));
         }
     }
 }

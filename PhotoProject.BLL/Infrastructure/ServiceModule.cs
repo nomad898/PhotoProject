@@ -1,13 +1,8 @@
 ﻿using Ninject.Modules;
 using PhotoProject.DAL.Repositories;
 using PhotoProject.DAL.Repositories.Impl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PhotoProject.BLL.Util
+namespace PhotoProject.BLL.Infrastructure
 {
     public class ServiceModule : NinjectModule
     {
